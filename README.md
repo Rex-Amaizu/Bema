@@ -17,7 +17,7 @@ A JavaScript Next.js Pages Router application that reads content from a local Wo
 2. Create a site named `wp-headless-test` and start it. The expected default URL is `http://wp-headless-test.local`.
 3. In WordPress Admin, open **Plugins > Add New**. Install and activate **WPGraphQL** and **Easy Digital Downloads**.
 4. Open **Downloads > Settings > General > Currency**, select **Nigerian Naira (NGN)**, and save.
-5. Open **Posts > Add New** and publish three posts, for example:
+5. Open **Posts > Add New** and publish at least three posts, for example:
    - Building reliable headless experiences
    - Designing resilient API boundaries
    - Automating the content lifecycle
@@ -90,6 +90,16 @@ Invoke-RestMethod "$site/wp-json/custom/v1/get-name"
 ```
 
 The final GET must return `{"reversed_name":"okE"}`. In the browser, open DevTools > Network, clear the log, toggle between three and all posts, and confirm no new `/graphql` request is made. Also stop the Local site temporarily and confirm that WordPress errors are shown while the exchange-rate section continues independently.
+
+### Verification record
+
+- Live Local site: `wp-headless-test.local`, WordPress 7.1, WPGraphQL 2.22.2, and Easy Digital Downloads 3.7.0 are active.
+- Five published posts are seeded in the live site so the default three-post view and no-refetch all-posts toggle are both observable.
+- Direct GraphQL, EDD settings, custom POST, and custom GET requests were run successfully; the name acceptance case returned `okE` and the currency returned `NGN`.
+- The toggle was exercised after stopping WordPress; all five already-loaded posts remained available, proving the toggle does not refetch.
+- WordPress downtime was tested and produced focused posts/currency errors without hiding the independent sections.
+- `npm test` (7 passing), `npm run lint`, and `npm run build` completed successfully. Desktop and 390px mobile layouts were visually inspected; the mobile document had no horizontal overflow.
+- The live exchangerate.host request currently returns an access-key-required response. The exact required URL is retained, the optional server-only key is supported, and the UI safely shows the provider failure until a key is supplied.
 
 ## Architecture & Reasoning
 
